@@ -1,6 +1,9 @@
 package se.hkr.activeageing.qrauth;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +32,9 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         MenuItem subMenu1Item = menu.getItem(0);
-        subMenu1Item.setIcon(R.drawable.ic_camera);
+        final Drawable camera = getResources().getDrawable(R.drawable.ic_camera);
+        camera.setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.SRC_ATOP);
+        subMenu1Item.setIcon(camera);
         subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         return true;
