@@ -96,17 +96,22 @@ public class MainActivity extends AppCompatActivity {
     private CheckURL checkURL(String contents) {
 
         final String protocol = "http://";
-
-        if (!contents.toLowerCase().startsWith(protocol)) {
-            return CheckURL.NotHTTP;
-        }else if (!contents.toLowerCase().substring(protocol.length(), protocol.length() + QRServer.length()).equalsIgnoreCase(QRServer)){
-            return CheckURL.WrongServer;
-        }else{
-            return CheckURL.Correct;
+        System.out.println(contents.toLowerCase().substring(protocol.length(), protocol.length() + QRServer.length()));
+        System.out.println(QRServer);
+        try {
+            if (!contents.toLowerCase().startsWith(protocol)) {
+                return CheckURL.NotHTTP;
+            } else if (!contents.toLowerCase().substring(protocol.length(), protocol.length() + QRServer.length()).equalsIgnoreCase(QRServer)) {
+                return CheckURL.WrongServer;
+            } else {
+                return CheckURL.Correct;
+            }
+        } catch (Exception ex) {
+            return CheckURL.UnknownError;
         }
     }
 
     private enum CheckURL{
-        Correct, NotHTTP, WrongServer
+        Correct, NotHTTP, WrongServer, UnknownError
     }
 }
