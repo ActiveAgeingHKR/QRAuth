@@ -17,13 +17,15 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_QR = 436;
     private static final String TAG = MainActivity.class.getSimpleName();
     private TextView mTextView;
     private WebView mWebView;
-    private final String QRServer = "www.example.com"; //TODO: change this to the correct server
+    private final String QRServer = "www.boredpanda.com/"; //TODO: change this to the correct server
     private static final int CAMERA_COMMAND = 31; //represent letter C inthe keyboard
     private static final long CAMERA_APP_DELAY = 2500; //time in mili sec to delay open the app again in case the command repeated
     private long LastTimeCameraAppCalled;
@@ -36,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
         mWebView = (WebView) findViewById(R.id.wv_main);
         Log.e(TAG, "on Create test");
 
-        setFocus(R.id.wv_main);
+        getArduinoSignal();
+
+//        setFocus(R.id.wv_main);
 
     }
 
@@ -98,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
                 Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
                 startActivity(marketIntent);
-            }catch (Exception ex){
+            }catch(Exception ex){
                 ex.printStackTrace();
             }
         }
@@ -126,6 +130,23 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "QR Canceled", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private boolean getArduinoSignal(){
+        Log.i(TAG, "get arduino signal");
+        boolean isArduinoSignal = false;
+        try {
+            isArduinoSignal = new AsyncArduino().execute("").get();
+            if (isArduinoSignal) {
+                Log.i(TAG, "call qr app");
+                callQRApp();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return isArduinoSignal;
     }
 
     private CheckURL checkURL(String contents) {
