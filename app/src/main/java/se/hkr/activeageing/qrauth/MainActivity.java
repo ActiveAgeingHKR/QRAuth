@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private TextView mTextView;
     private WebView mWebView;
-    private final String QRServer = "www.boredpanda.com/"; //TODO: change this to the correct server
+    private final String QRServer = "http://192.168.1.92:8080/MainServerREST/api/visitorschedule/visit/"; //TODO: change this to the correct server
     private static final int CAMERA_COMMAND = 31; //represent letter C inthe keyboard
     private static final long CAMERA_APP_DELAY = 2500; //time in mili sec to delay open the app again in case the command repeated
     private long LastTimeCameraAppCalled;
@@ -114,18 +114,21 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_QR) {
             if (resultCode == RESULT_OK) {
                 String contents = data.getStringExtra("SCAN_RESULT");
+                Log.i(TAG, contents);
+                Log.i(TAG, QRServer+contents);
                 mTextView.setText(contents);
-                switch (checkURL(contents)) {
-                    case Correct:
-                        mWebView.loadUrl(contents);
-                        break;
-                    case NotHTTP:
-                        Toast.makeText(getApplicationContext(), "Not HTTP protocol", Toast.LENGTH_SHORT).show();
-                        break;
-                    case WrongServer:
-                        Toast.makeText(getApplicationContext(), "Wrong Server, our server is: " + QRServer, Toast.LENGTH_SHORT).show();
-                        break;
-                }
+                mWebView.loadUrl(QRServer + contents);
+//                switch (checkURL(contents)) {
+//                    case Correct:
+//                        mWebView.loadUrl(contents);
+//                        break;
+//                    case NotHTTP:
+//                        Toast.makeText(getApplicationContext(), "Not HTTP protocol", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case WrongServer:
+//                        Toast.makeText(getApplicationContext(), "Wrong Server, our server is: " + QRServer, Toast.LENGTH_SHORT).show();
+//                        break;
+//                }
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(getApplicationContext(), "QR Canceled", Toast.LENGTH_SHORT).show();
             }
